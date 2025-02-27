@@ -29,8 +29,8 @@ char_to_terrain = {
     'S': {"name": "Saída",           "cost": 1,    "color": "brown"}
 }
 
-# Mapa definido diretamente no código (42 linhas de 42 caracteres cada)
-map_lines = [
+# Mapa original (imóvel) para podermos resetar o mapa
+original_map_lines = [
     "##########################################",
     "#..............#............#..~~........#",
     "#..RRR~.~RRRRR.P............#..~~..#RRR..#",
@@ -75,18 +75,21 @@ map_lines = [
     "#######################################S##"
 ]
 
+# Inicialmente, o mapa ativo é uma cópia do original
+map_lines = original_map_lines[:]
+
 #------------------------------------------------------------------------------
-#                  FUNÇÃO PARA REMOVER PERSONAGENS
+#                      FUNÇÃO PARA REMOVER PERSONAGENS
 #------------------------------------------------------------------------------
 
 def remove_friend_at(pos):
     """
-    Atualiza o mapa removendo o personagem (E, D, L, M ou W) na posição 'pos',
-    substituindo-o por '.'.
+    Atualiza o mapa removendo o personagem (E, D, L, M ou W) na posição 'pos'
+    (substituindo-o por '.').
     """
     i, j = pos
     row = list(map_lines[i])
-    if row[j] in ['E','D','L','M','W']:
+    if row[j] in ['E', 'D', 'L', 'M', 'W']:
         row[j] = '.'
         map_lines[i] = "".join(row)
 
@@ -114,11 +117,9 @@ def heuristic(a, b):
 def a_star(start, goal):
     open_set = []
     heapq.heappush(open_set, (0, start))
-    
     came_from = {}
     g_score = {start: 0}
     f_score = {start: heuristic(start, goal)}
-    
     while open_set:
         current = heapq.heappop(open_set)[1]
         if current == goal:
@@ -128,7 +129,6 @@ def a_star(start, goal):
                 path.append(current)
             path.reverse()
             return path
-        
         for neighbor in get_neighbors(current):
             tentative_g = g_score[current] + get_cost(neighbor[0], neighbor[1])
             if neighbor not in g_score or tentative_g < g_score[neighbor]:
@@ -148,7 +148,7 @@ def draw_map(canvas):
         line = map_lines[i]
         for j in range(COLS):
             cell_char = line[j]
-            terrain_info = char_to_terrain.get(cell_char, char_to_terrain['#'])
+            terrain_info = char_to_terrain.get(cell_char, {"name": "", "color": "white"})
             color = terrain_info["color"]
             x1 = j * CELL_SIZE
             y1 = i * CELL_SIZE
@@ -200,7 +200,6 @@ def compute_full_path():
     
     current = start
     full_path = []
-    
     while friend_positions:
         best_friend = None
         best_cost = math.inf
@@ -234,7 +233,6 @@ def compute_full_path():
         full_path.extend(path_exit[1:])
     else:
         full_path.extend(path_exit)
-    
     return full_path
 
 def animate_agent(canvas, path, index=0):
@@ -247,7 +245,7 @@ def animate_agent(canvas, path, index=0):
         x2 = x1 + CELL_SIZE
         y2 = y1 + CELL_SIZE
         
-        # Se a célula atual contém um personagem, remove-o e redesenha o mapa e o caminho
+        # Se a célula atual contém um personagem, remove-o e atualiza o mapa
         if map_lines[i][j] in ['E','D','L','M','W']:
             remove_friend_at(pos)
             draw_map(canvas)
@@ -286,13 +284,14 @@ def start_full_search(canvas):
         print("Não foi possível computar o caminho completo.")
 
 def reset_map(canvas):
-    global agent_shape, highlight_shape, animation_job
+    global agent_shape, highlight_shape, animation_job, computed_path, map_lines
     if animation_job is not None:
         canvas.after_cancel(animation_job)
         animation_job = None
+    map_lines = original_map_lines[:]  # Cria uma cópia do mapa original
+    computed_path = None
+    canvas.delete("all")
     draw_map(canvas)
-    agent_shape = None
-    highlight_shape = None
 
 def update_speed(val):
     global speed_delay
@@ -308,7 +307,7 @@ def main():
     canvas = tk.Canvas(root, width=canvas_width, height=canvas_height)
     canvas.pack()
     
-    # Carrega a imagem do agente e ajusta o tamanho usando subsample ou zoom
+    # Carrega a imagem do agente e ajusta seu tamanho para aproximar CELL_SIZE (20 pixels)
     img = tk.PhotoImage(file="eleven.png")
     w_original = img.width()
     h_original = img.height()
