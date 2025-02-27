@@ -30,7 +30,14 @@ def a_star(start, goal):
                 heapq.heappush(open_set, (f_score[neighbor], neighbor))
     return None
 
-def compute_full_path():
+def compute_segments():
+    """
+    Computa e retorna uma lista de segmentos:
+    - De 'E' até o amigo de menor custo (por exemplo, 'D');
+    - De um amigo ao próximo, até que todos tenham sido visitados;
+    - E, por fim, do último amigo até a saída ('S').
+    """
+    segments = []
     start = find_cell('E')
     if start is None:
         print("Posição de Eleven não encontrada!")
@@ -46,7 +53,6 @@ def compute_full_path():
             print(f"Amigo {f} não encontrado!")
     
     current = start
-    full_path = []
     while friend_positions:
         best_friend = None
         best_cost = math.inf
@@ -62,10 +68,7 @@ def compute_full_path():
         if best_path is None:
             print("Não foi possível encontrar caminho para algum amigo!")
             return None
-        if full_path and best_path[0] == full_path[-1]:
-            full_path.extend(best_path[1:])
-        else:
-            full_path.extend(best_path)
+        segments.append(best_path)
         current = friend_positions.pop(best_friend)
     
     exit_cell = find_cell('S')
@@ -76,8 +79,5 @@ def compute_full_path():
     if path_exit is None:
         print("Não foi possível encontrar caminho para a saída!")
         return None
-    if full_path and path_exit[0] == full_path[-1]:
-        full_path.extend(path_exit[1:])
-    else:
-        full_path.extend(path_exit)
-    return full_path
+    segments.append(path_exit)
+    return segments

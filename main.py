@@ -33,7 +33,7 @@ def main():
     button_frame = tk.Frame(root)
     button_frame.pack(pady=10)
     
-    # Cria o label para exibir o custo
+    # Label para exibir o custo total
     cost_label = tk.Label(button_frame, text="Custo: 0", font=("Arial", 10, "bold"))
     cost_label.pack(side=tk.LEFT, padx=5)
     
