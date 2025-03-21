@@ -39,7 +39,7 @@ O projeto está organizado em módulos para facilitar a manutenção e a compree
 1. **Clone o Repositório:**
 
    ```bash
-   git clone [https://github.com/seu-usuario/Busca-Heuristica.git](https://github.com/MateusDG/Busca-Heuristica.git)
+   git clone https://github.com/MateusDG/Busca-Heuristica.git
    cd Busca-Heuristica
    ```
 
