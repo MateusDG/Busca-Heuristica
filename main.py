@@ -14,7 +14,7 @@ def main():
     canvas.pack()
     
     # Carrega a imagem do agente e ajusta o tamanho usando subsample ou zoom
-    img = tk.PhotoImage(file="eleven.png")
+    img = tk.PhotoImage(file="img/eleven.png")
     w_original = img.width()
     h_original = img.height()
     desired_size = config.CELL_SIZE 
