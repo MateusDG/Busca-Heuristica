@@ -26,6 +26,8 @@ def get_cost(i, j):
     cell_char = config.map_lines[i][j]
     return config.char_to_terrain.get(cell_char, config.char_to_terrain['#'])["cost"]
 
+# O agente não pode andar na diagonal, somente na verticale na horizontal
+
 def get_neighbors(pos):
     """
     Retorna as células vizinhas válidas (acima, abaixo, esquerda e direita) da posição 'pos'.
@@ -104,6 +106,9 @@ def find_cell(character):
         if character in line:
             return (i, line.index(character))
     return None
+
+# O  agente  sempre termina a sua jornada ao reunir todo o  
+# grupo e chegar na porta de saída do laboratório (parte inferior do mapa, posição [41,42])
 
 def compute_full_path():
     """

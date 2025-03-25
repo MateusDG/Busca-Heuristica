@@ -1,5 +1,8 @@
 import math
 
+# 1. O mapa principal deve ser representado por  
+# uma matriz 42 x 42 (igual à mostrada na Figura 2).
+
 # Configurações do grid
 ROWS = 42
 COLS = 42
@@ -28,6 +31,15 @@ char_to_terrain = {
     'W': {"name": "W",               "cost": 1,    "color": "pink"},
     'S': {"name": "Saída",           "cost": 1,    "color": "brown"}
 }
+
+# O agente sempre inicia a jornada no ponto onde Eleven
+# está no mapa [7, 41]
+
+# Os mapas devem ser configuráveis, ou seja, 
+# deve ser possível modificar o tipo de terreno em cada local.  
+# O mapa pode ser  lido de um arquivo de texto ou deve ser 
+# facilmente editável no código.
+
 
 # Mapa atual
 map_lines = [
@@ -75,7 +87,6 @@ map_lines = [
     "########################################S#"
 ]
 
-# Mapa original definido diretamente no código (para o reset)
 original_map_lines = [
     "##########################################",
     "#..............#............#..~~........#",

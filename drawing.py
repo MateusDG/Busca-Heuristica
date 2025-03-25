@@ -30,6 +30,10 @@ def draw_map(canvas):
                 canvas.create_text(cx, cy, text=terrain_info["name"],
                                    fill="black", font=("Arial", 8, "bold"), tags="label")
     canvas.tag_raise("label")
+    
+# Deve existir uma maneira de visualizar os movimentos do agente, 
+# mesmo que a interface seja bem simples. 
+# Podendo até mesmo ser uma matriz desenhada e atualizada no console.
 
 def draw_path(canvas, path):
     """
